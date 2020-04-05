@@ -9,6 +9,8 @@
 var width = 960;
 var height = 500;
 const MAP_BG_COLOR = "#cdc597";
+const DOT_COLOR = "#000000";
+const SELECTED_DOT_COLOR = "#ff0000";
 
 var svg = d3
   .select("#map-container")
@@ -24,8 +26,16 @@ var projection = d3
 var path = d3.geoPath().projection(projection);
 
 d3.json("us.json", function(err, us) {
-  //console.log('err->>', err);
-  //console.log('us-->', us)
+  d3.csv("data/SBNFoodFestivalAttendee2019Data.csv", function(cities) {
+    drawMap(us, cities);
+  });
+});
+
+
+var brush = d3.brush().on("start brush", highlight).on("end", brushend);
+
+
+function drawMap(us, cities) {
   var mapGroup = svg.append("g").attr("class", "mapGroup");
 
   mapGroup
@@ -39,5 +49,46 @@ d3.json("us.json", function(err, us) {
     .attr("class", "states")
     .style("fill", MAP_BG_COLOR);
 
+  var circles = svg.selectAll('circle')
+                   .data(cities)
+                   .enter()
+                   .append("circle")
+                   .attr('class', 'cities')
+                   .style('fill', DOT_COLOR)
+                   .attr('cx', function(d) {
+                      if (!projection([d.Lon, d.Lat])) {
+                       return;
+                      }
+                     return projection([d.Lon, d.Lat])[0];
+                   })
+                   .attr('cy', function(d) {
+                      if (!projection([d.Lon, d.Lat])) {
+                       return;
+                      }
+                    return projection([d.Lon, d.Lat])[1];
+                   })
+                   .attr("r", 4);
+    svg.append("g").call(brush);
+}
 
-});
+
+function highlight() {
+  if (d3.event.selection === null) return;
+
+  let [[x0, y0], [x1, y1]] = d3.event.selection;
+
+  circles = d3.selectAll("circle");
+// console.log('projection([d.Lon, d.Lat]):');
+  circles.classed(
+      'selected', 
+      d =>
+          projection([d.Lon, d.Lat]) &&
+          x0 <= projection([d.Lon, d.Lat])[0] &&
+          projection([d.Lon, d.Lat])[0] <= x1 &&
+          y0 <= projection([d.Lon, d.Lat])[1] &&
+          projection([d.Lon, d.Lat])[1] <= y1 
+           
+  );
+}
+function brushend() {
+}
