@@ -2,11 +2,15 @@ var width = 960;
 var height = 500;
 const MAP_BG_COLOR = "#cdc597";
 
+//For the Map
 var svg = d3
   .select("#map-container")
   .append("svg")
   .attr("width", width)
   .attr("height", height);
+  .call(d3.zoom().on("zoom", function () {
+       svg.attr("transform", d3.event.transform)
+    }))
 
 var projection = d3
   .geoAlbersUsa()
@@ -14,7 +18,7 @@ var projection = d3
   .scale(width);
 
 var path = d3.geoPath().projection(projection);
-
+//Map Zipcode Data
 d3.json("us.json", function(err, us) {
   d3.csv("data/SBNFoodFestivalAttendee2019Data.csv", function(cities) {
     drawMap(us, cities);
