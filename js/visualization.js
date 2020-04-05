@@ -2,14 +2,18 @@ var width = 960;
 var height = 500;
 const MAP_BG_COLOR = "#cdc597";
 
+
+
 //For the Map
 var svg = d3
   .select("#map-container")
   .append("svg")
   .attr("width", width)
   .attr("height", height);
-  .call(d3.zoom().on("zoom", function () {
+
+svg.call(d3.zoom().on("zoom", function () {
        svg.attr("transform", d3.event.transform)
+       //svg.attr("translate", d3.event.translate)
     }))
 
 var projection = d3
