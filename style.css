@@ -22,8 +22,11 @@ h1, h2, h3 {
 }
 
 
-#map-container .mapGroup.cities.selected {
-	color: #ff0000
+.cities {
+	fill: orange;
+  }
+.cities.selected {	
+	fill:red;
 }
 
 /* Fork on GitHub ribbon via https://codepo8.github.io/css-fork-on-github-ribbon/# */  

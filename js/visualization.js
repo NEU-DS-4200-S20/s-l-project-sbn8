@@ -1,16 +1,6 @@
-// // Immediately Invoked Function Expression to limit access to our 
-// // variables and prevent 
-// ((() => {
-
-//   console.log("Hello, world!");
-
-// })());
-
 var width = 960;
 var height = 500;
 const MAP_BG_COLOR = "#cdc597";
-const DOT_COLOR = "#000000";
-const SELECTED_DOT_COLOR = "#ff0000";
 
 var svg = d3
   .select("#map-container")
@@ -54,7 +44,6 @@ function drawMap(us, cities) {
                    .enter()
                    .append("circle")
                    .attr('class', 'cities')
-                   .style('fill', DOT_COLOR)
                    .attr('cx', function(d) {
                       if (!projection([d.Lon, d.Lat])) {
                        return;
@@ -78,7 +67,7 @@ function highlight() {
   let [[x0, y0], [x1, y1]] = d3.event.selection;
 
   circles = d3.selectAll("circle");
-// console.log('projection([d.Lon, d.Lat]):');
+  //console.log('highlight: ', circles);
   circles.classed(
       'selected', 
       d =>
