@@ -21,10 +21,11 @@ h1, h2, h3 {
   height: 100%;
 }
 
-
+/* data points color */
 .cities {
 	fill: orange;
   }
+/* data points color when selected */
 .cities.selected {	
 	fill:red;
 }
