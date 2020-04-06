@@ -38,16 +38,18 @@ svg.call(d3.zoom().on("zoom", function () {
        //svg.attr("translate", d3.event.translate)
     }))
 
+// create projection for coordinates on map
 var projection = d3
   .geoAlbersUsa()
   .translate([width / 2, height / 2])
   .scale(width);
 
 var path = d3.geoPath().projection(projection);
-//Map Zipcode Data
 d3.json("us.json", function(err, us) {
   d3.csv("data/SBNFoodFestivalAttendee2019Data.csv", function(cities) {
+    //Map Zipcode Data
     drawMap(us, cities);
+
     drawAge(cities); 
   });
 });
@@ -105,9 +107,11 @@ function drawAge(cities) {
   console.log(yScale)
 }
 
+
 function drawMap(us, cities) {
   var mapGroup = svg.append("g").attr("class", "mapGroup");
 
+  // draw the background map
   mapGroup
     .append("g")
     // .attr("id", "states")
@@ -119,6 +123,7 @@ function drawMap(us, cities) {
     .attr("class", "states")
     .style("fill", MAP_BG_COLOR);
 
+  // draw each point on the map
   var circles = svg.selectAll('circle')
                    .data(cities)
                    .enter()
@@ -140,14 +145,13 @@ function drawMap(us, cities) {
     svg.append("g").call(brush);
 }
 
-
+// Enable selection of group of points on map
 function highlight() {
   if (d3.event.selection === null) return;
 
   let [[x0, y0], [x1, y1]] = d3.event.selection;
 
   circles = d3.selectAll("circle");
-  //console.log('highlight: ', circles);
   circles.classed(
       'selected', 
       d =>
