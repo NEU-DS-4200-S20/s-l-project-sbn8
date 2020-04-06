@@ -8,6 +8,12 @@ var svg = d3
   .attr("width", width)
   .attr("height", height);
 
+var svg2 = d3
+  .select("#chart-container")
+  .append("svg")
+  .attr("width", width)
+  .attr("height", height);
+
 var projection = d3
   .geoAlbersUsa()
   .translate([width / 2, height / 2])
@@ -22,7 +28,10 @@ d3.json("us.json", function(err, us) {
 });
 
 
-var brush = d3.brush().on("start brush", highlight).on("end", brushend);
+var brush = d3
+  .brush()
+  .on("start brush", highlight)
+  .on("end", brushend);
 
 
 function drawMap(us, cities) {
@@ -81,3 +90,4 @@ function highlight() {
 }
 function brushend() {
 }
+
