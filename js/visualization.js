@@ -74,19 +74,20 @@ function drawAge(cities) {
 	// append the svg object to the body of the page
 	// append a 'group' element to 'svg'
 	// moves the 'group' element to the top left margin
-	var svg = d3.select("body").append("svg")
+	var svg = svg_age.append("g").attr("class", "svg age")
 	    .attr("width", width + margin.left + margin.right)
 	    .attr("height", height + margin.top + margin.bottom)
 	  .append("g")
 	    .attr("transform", 
 	          "translate(" + margin.left + "," + margin.top + ")");
+	// console.log(svg);
 
 	var freq = {}
 
 	// get frequencies of age ranges
 	// console.log(cities)
 	 for (row in cities){
-	 	console.log(cities[row]["What is your age range?"]);
+	 	// console.log(cities[row]["What is your age range?"]);
 	 	agerange = cities[row]["What is your age range?"]
 	 	if (freq[agerange] == undefined) {
 	 		if (agerange != "" && agerange != undefined) {
@@ -106,31 +107,42 @@ function drawAge(cities) {
 
 	 for (var key in freq) {
 	     if (freq.hasOwnProperty(key)) {
-	         arr.push( [ key, freq[key] ] );
+	         arr.push( { range: key, frequency: freq[key] }  );
 	     }
 	 }
+	 console.log(arr);
 
-	 console.log(arr)
+	 // Scale the range of the data in the domains
+	  x.domain(arr.map(function(d) { return d.range; }));
+	  y.domain([0, d3.max(arr, function(d) { return d.frequency; })]);
+
+
+
+	 // console.log(freq[0])
 
 	 //https://bl.ocks.org/d3noob/bdf28027e0ce70bd132edc64f1dd7ea4
 
+	 // append the rectangles for the bar chart
+	  svg.selectAll(".bar")
+	      .data(arr)
+	    .enter().append("rect")
+	      .attr("class", "bar")
+	      .attr("x", function(d) { return x(d.range); })
+	      .attr("width", x.bandwidth())
+	      .attr("y", function(d) { return y(d.frequency); })
+	      .attr("height", function(d) { return height - y(d.frequency); });
+
+
+	 // add the x Axis
+	svg.append("g")
+	      .attr("transform", "translate(0," + height + ")")
+	      .call(d3.axisBottom(x));
+
+	  // add the y Axis
+	  svg.append("g")
+	      .call(d3.axisLeft(y));
+
 	
-  // var svg_age = d3.select("svg_age"),
-  //       // margin = 200,
-  //       width = svg.attr("width") - margin.left - margin.right,
-  //       height = svg.attr("height") - margin.top - margin.bottom;
-
-  // var xScale = d3.scaleBand().range ([0, width]),
-  //     yScale = d3.scaleLinear().range ([height, 0]);
-
-
-
-  // // Render the axis
-  // svg_age.append('g')
-  //     .call(xAxis)
-  //     .attr('transform', 'translate(0,' + (height - 5) + ')')
-  // svg_age.append('g').call(yAxis)
-  // console.log(yScale)
 }
 
 
