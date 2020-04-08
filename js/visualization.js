@@ -50,6 +50,7 @@ d3.json("us.json", function(err, us) {
     //Map Zipcode Data
     drawMap(us, cities);
 
+    // Age barchart
     drawAge(cities); 
   });
 });
@@ -58,53 +59,78 @@ d3.json("us.json", function(err, us) {
 var brush = d3.brush().on("start brush", highlight).on("end", brushend);
 
 function drawAge(cities) {
-  let margin = {
-    top: 20,
-    right: 30,
-    bottom: 40,
-    left: 30
-  }
+  // set the dimensions and margins of the graph
+	var margin = {top: 20, right: 20, bottom: 30, left: 40},
+	    width = 960 - margin.left - margin.right,
+	    height = 500 - margin.top - margin.bottom;
 
-    // Create a scale
-  let xScale = d3.scaleLinear()
-                  .domain([
-                    d3.min(cities, function(d) { return d.Age; }),
-                    d3.max(cities, function(d) { return d.Age; })
-                  ])
-                  .range([margin.left, width - margin.right])
+	// set the ranges
+	var x = d3.scaleBand()
+	          .range([0, width])
+	          .padding(0.1);
+	var y = d3.scaleLinear()
+	          .range([height, 0]);
 
-  let yScale = d3.scaleLinear()
-                  .domain([
-                    d3.min(cities, function(d) { return d.Age; }),
-                    d3.max(cities, function(d) { return d.Age; })
-                  ])
-                  .range([height - margin.bottom, margin.top])
+	// append the svg object to the body of the page
+	// append a 'group' element to 'svg'
+	// moves the 'group' element to the top left margin
+	var svg = d3.select("body").append("svg")
+	    .attr("width", width + margin.left + margin.right)
+	    .attr("height", height + margin.top + margin.bottom)
+	  .append("g")
+	    .attr("transform", 
+	          "translate(" + margin.left + "," + margin.top + ")");
 
+	var freq = {}
 
-  // Create an axis
-  let xAxis = d3.axisTop()
-                .scale(xScale)
-                .ticks(5);
-  let yAxis = d3.axisRight()
-                .scale(yScale)
-                .ticks(5);
+	// get frequencies of age ranges
+	// console.log(cities)
+	 for (row in cities){
+	 	console.log(cities[row]["What is your age range?"]);
+	 	agerange = cities[row]["What is your age range?"]
+	 	if (freq[agerange] == undefined) {
+	 		if (agerange != "" && agerange != undefined) {
+	 			freq[agerange] = 1
+	 		}
+	 	} 
+	 	else {
+	 		freq[agerange] += 1
+	 	}
+	 }
 
-  // var svg = d3.select("svg"),
-  //       margin = 200,
-  //       width = svg.attr("width") - margin,
-  //       height = svg.attr("height") - margin;
+	 // console.log(freq)
+
+	 // convert to list of objects
+	 // var dict = { 'a': 'aa', 'b': 'bb' };
+	 var arr = [];
+
+	 for (var key in freq) {
+	     if (freq.hasOwnProperty(key)) {
+	         arr.push( [ key, freq[key] ] );
+	     }
+	 }
+
+	 console.log(arr)
+
+	 //https://bl.ocks.org/d3noob/bdf28027e0ce70bd132edc64f1dd7ea4
+
+	
+  // var svg_age = d3.select("svg_age"),
+  //       // margin = 200,
+  //       width = svg.attr("width") - margin.left - margin.right,
+  //       height = svg.attr("height") - margin.top - margin.bottom;
 
   // var xScale = d3.scaleBand().range ([0, width]),
   //     yScale = d3.scaleLinear().range ([height, 0]);
 
 
 
-  // Render the axis
-  svg_age.append('g')
-      .call(xAxis)
-      .attr('transform', 'translate(0,' + (height - 5) + ')')
-  svg_age.append('g').call(yAxis)
-  console.log(yScale)
+  // // Render the axis
+  // svg_age.append('g')
+  //     .call(xAxis)
+  //     .attr('transform', 'translate(0,' + (height - 5) + ')')
+  // svg_age.append('g').call(yAxis)
+  // console.log(yScale)
 }
 
 
