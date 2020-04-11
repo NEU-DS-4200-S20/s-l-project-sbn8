@@ -1,5 +1,5 @@
-var width = 960;
-var height = 500;
+var width = 960/2;
+var height = 500/2;
 const MAP_BG_COLOR = "#cdc597";
 
 
@@ -21,14 +21,14 @@ var svg_age = d3
 
 //barchart race
 var svg_race = d3
-  .select("#hart-container-race")
+  .select("#chart-container-race")
   .append("svg")
   .attr("width", width)
   .attr("height", height);
 
 //barchart income
 var svg_income = d3
-  .select("#hart-container-income")
+  .select("#chart-container-income")
   .append("svg")
   .attr("width", width)
   .attr("height", height);
@@ -43,9 +43,10 @@ var projection = d3
 
 
 var citiesobj;
-var x;
-var y;
-
+var x_age;
+var y_age;
+var x_race;
+var y_race;
 
 var path = d3.geoPath().projection(projection);
 d3.json("us.json", function(err, us) {
@@ -57,6 +58,9 @@ d3.json("us.json", function(err, us) {
 
     // Age barchart
     drawAge(cities); 
+
+    // Race barchart
+    drawRace(cities);
   });
 });
 
@@ -66,14 +70,14 @@ var brush = d3.brush().on("start brush", highlight).on("end", brushend);
 function drawAge(cities) {
   // set the dimensions and margins of the graph
 	var margin = {top: 20, right: 20, bottom: 30, left: 40},
-	    width = 960 - margin.left - margin.right,
-	    height = 500 - margin.top - margin.bottom;
+	    width = 960/2 - margin.left - margin.right,
+	    height = 500/2 - margin.top - margin.bottom;
 
 	// set the ranges
-	x = d3.scaleBand()
+	x_age = d3.scaleBand()
 	          .range([0, width])
 	          .padding(0.1);
-	y = d3.scaleLinear()
+	y_age = d3.scaleLinear()
 	          .range([height, 0]);
 
 	// append the svg object to the body of the page
@@ -89,13 +93,20 @@ function drawAge(cities) {
 	          "translate(" + margin.left + "," + margin.top + ")");
 	console.log(citiesobj);
 
-	var freq = {}
+	var freq = {
+    "Under 18": 0,
+    "19-25": 0,
+    "26-35": 0,
+    "36-50": 0,
+    "51-64": 0,
+    "65+": 0
+  }
 
 	// get frequencies of age ranges
 	// console.log(cities)
-	 for (row in citiesobj){
+	 for (row in cities){
 	 	// console.log(cities[row]["What is your age range?"]);
-	 	agerange = citiesobj[row]["What is your age range?"]
+	 	agerange = cities[row]["What is your age range?"]
 	 	if (freq[agerange] == undefined) {
 	 		if (agerange != "" && agerange != undefined) {
 	 			freq[agerange] = 1
@@ -119,52 +130,127 @@ function drawAge(cities) {
 	 }
 	 console.log(arr);
 
-   // find which circles are brushed over
-   circles = d3.selectAll("circle");
-
-   console.log(circles);
-   console.log(circles["_groups"][0]);
-   // console.log(circles);
-   for (z in circles["_groups"][0]) {
-    point = circles["_groups"][0][z - 1];
-    if (point != undefined) {
-      console.log(point);
-    }
-    // console.log(point.classList.contains("selected"));
-   }
-
 
 	 // Scale the range of the data in the domains
-	  x.domain(arr.map(function(d) { return d.range; }));
-	  y.domain([0, d3.max(arr, function(d) { return d.frequency; })]);
+	  x_age.domain(arr.map(function(d) { return d.range; }));
+	  y_age.domain([0, d3.max(arr, function(d) { return d.frequency; })]);
 
-
-
-	 // console.log(freq[0])
-
-	 //https://bl.ocks.org/d3noob/bdf28027e0ce70bd132edc64f1dd7ea4
 
 	 // append the rectangles for the bar chart
 	  svg.selectAll(".bar")
 	      .data(arr)
 	    .enter().append("rect")
 	      .attr("class", "bar")
-	      .attr("x", function(d) { return x(d.range); })
-	      .attr("width", x.bandwidth())
-	      .attr("y", function(d) { return y(d.frequency); })
-	      .attr("height", function(d) { return height - y(d.frequency); });
+	      .attr("x", function(d) { return x_age(d.range); })
+	      .attr("width", x_age.bandwidth())
+	      .attr("y", function(d) { return y_age(d.frequency); })
+	      .attr("height", function(d) { return height - y_age(d.frequency); });
 
 
 	 // add the x Axis
 	svg.append("g")
 	      .attr("transform", "translate(0," + height + ")")
-	      .call(d3.axisBottom(x));
+	      .call(d3.axisBottom(x_age));
 
 	  // add the y Axis
 	  svg.append("g")
-	      .call(d3.axisLeft(y));
+	      .call(d3.axisLeft(y_age));
 
 	
+}
+
+function drawRace(cities) {
+  // set the dimensions and margins of the graph
+  var margin = {top: 20, right: 20, bottom: 30, left: 40},
+      width = 960/2 - margin.left - margin.right,
+      height = 500/2 - margin.top - margin.bottom;
+
+   
+  // set the ranges   
+  x_race = d3.scaleBand()
+            .range([0, width])
+            .padding(0.1);
+  y_race = d3.scaleLinear()
+            .range([height, 0]);
+
+  var svg2 = svg_race.append("g")
+      .attr("class", "svg race")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("id", "chartcontainer2")
+      .attr("transform", 
+            "translate(" + margin.left + "," + margin.top + ")");
+  console.log(cities);
+
+  // only need to put values dict is you want to order them
+  var freq = {
+    // "Hispanic/Latino": 0,
+    // "American Indian or Alaskan Native": 0,
+    // "White/Caucasian": 0,
+    // "Asian": 0,
+    //
+  }
+
+
+  // get frequencies of race groups
+  // console.log(cities)
+   for (row in cities){
+    // console.log(cities[row]["What is your age range?"]);
+    race = cities[row]["Race"]//.substring(0,4);
+    // console.log(typeof race);
+    // if (race != "" && race != undefined) {
+    //   race = race.substring(0,4);
+    // }
+    
+    console.log(race);
+    if (freq[race] == undefined) {
+      if (race != "" && race != undefined) {
+        freq[race] = 1
+      }
+    } 
+    else {
+      freq[race] += 1
+    }
+   }
+
+   var arr = [];
+
+   for (var key in freq) {
+       if (freq.hasOwnProperty(key)) {
+           arr.push( { range: key, frequency: freq[key] }  );
+       }
+   }
+   console.log(arr);
+
+
+  // Scale the range of the data in the domains
+  x_race.domain(arr.map(function(d) { return d.range; }));
+  y_race.domain([0, d3.max(arr, function(d) { return d.frequency; })]);
+
+
+
+   // append the rectangles for the bar chart
+    svg2.selectAll(".bar")
+        .data(arr)
+      .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", function(d) { return x_race(d.range); })
+        .attr("width", x_race.bandwidth())
+        .attr("y", function(d) { return y_race(d.frequency); })
+        .attr("height", function(d) { return height - y_race(d.frequency); });
+
+
+
+  // add the x Axis
+  svg2.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x_race))
+        // .style("font-size", "6px");
+
+  // add the y Axis
+  svg2.append("g")
+      .call(d3.axisLeft(y_race));
 }
 
 
@@ -174,16 +260,14 @@ function drawMap(us, cities) {
   svg.call(d3.zoom().on("zoom", function () {
        mapGroup.attr("transform", d3.event.transform)
        svg.attr("translate", d3.event.translate)
-       // mapGroup.selectAll("circle")
-       //          .attr("r", function(d) {
-       //                // console.log(d3.event.scale);
-       //                // console.log(d3.event.transform);
-       //               if (d3.event && d3.event.transform.k) {
-       //                  return 4/d3.event.transform.k;
-       //               }
-       //               else {
-       //                return 4;
-       //               }})
+       mapGroup.selectAll("circle")
+                .attr("r", function(d) {
+                     if (d3.event && d3.event.transform.k) {
+                        return 4/d3.event.transform.k;
+                     }
+                     else {
+                      return 4;
+                     }})
     }))
   .append("g");
 
@@ -229,8 +313,8 @@ function highlight() {
   if (d3.event.selection === null) return;
 
   var margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    width = 960/2 - margin.left - margin.right,
+    height = 500/2 - margin.top - margin.bottom;
 
   let [[x0, y0], [x1, y1]] = d3.event.selection;
 
@@ -248,9 +332,12 @@ function highlight() {
   // console.log(circles);
   // print(citiesobj);
 
+
+
   d3.selectAll("g.highlighted")
     .remove();
 
+  // 341 - 386 is for brushing for age barchart
   var freq = {}
 
   var selected = d3.selectAll(".selected")
@@ -270,10 +357,10 @@ function highlight() {
                         }
                       }
 
-                      console.log(freq);
+                      // console.log(freq);
   });
 
-                    // convert freq to list of objects, category -> size
+   // convert freq to list of objects, category -> size
    // var dict = { 'a': 'aa', 'b': 'bb' };
    var arr = [];
 
@@ -282,8 +369,9 @@ function highlight() {
            arr.push( { range: key, frequency: freq[key] }  );
        }
    }
-   console.log(freq);
+   // console.log(freq);
 
+  // add new red rectangles over the bar chart, indicating selected
   d3.select("#chartcontainer")
     .append("g")
       .attr("class", "highlighted")
@@ -291,19 +379,61 @@ function highlight() {
         .data(arr)
       .enter().append("rect")
         .attr("class", "barx")
-        .attr("x", function(d) { return x(d.range); })
-        .attr("width", x.bandwidth())
-        .attr("y", function(d) { return y(d.frequency); })
-        .attr("height", function(d) { return height - y(d.frequency); })
+        .attr("x", function(d) { return x_age(d.range); })
+        .attr("width", x_age.bandwidth())
+        .attr("y", function(d) { return y_age(d.frequency); })
+        .attr("height", function(d) { return height - y_age(d.frequency); })
         .attr("fill", "red");
 
-  // console.log(selected);
-  // for (x in selected["_groups"][0]) {
-  //   console.log(x);
-  // }
+// brushing for age starts here
 
+var freq_race = {}
 
+var selected_race = d3.selectAll(".selected")
+                    .each(function(d) {
+                      var agerange = d["Race"]
 
+                      if (agerange != "") {
+
+                        if (freq_race[agerange]) {
+                          freq_race[agerange] += 1
+                          // console.log(freq[agerange]);
+
+                        }
+                        else {
+                          freq_race[agerange] = 1
+
+                        }
+                      }
+
+  }); 
+
+// convert freq to list of objects, category -> size
+// var dict = { 'a': 'aa', 'b': 'bb' };
+var arr2 = [];  //reuse same arr variable from above
+
+for (var key in freq_race) {
+   if (freq_race.hasOwnProperty(key)) {
+       arr2.push( { range: key, frequency: freq_race[key] }  );
+   }
+}
+console.log(arr2);
+
+// add new red rectangles over the bar chart, indicating selected
+d3.select("#chartcontainer2")
+  .append("g")
+    .attr("class", "highlighted")
+    .selectAll(".barx")
+      .data(arr2)
+    .enter().append("rect")
+      .attr("class", "barx")
+      .attr("x", function(d) { return x_race(d.range); })
+      .attr("width", x_race.bandwidth())
+      .attr("y", function(d) { return y_race(d.frequency); })
+      .attr("height", function(d) { return height - y_race(d.frequency); })
+      .attr("fill", "red");
+
+// brushing for income here
 
 }
 function brushend() {

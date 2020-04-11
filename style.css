@@ -23,7 +23,7 @@ h1, h2, h3 {
 
 /* data points color */
 .cities {
-	fill: orange;
+	fill: steelblue;
   }
 /* data points color when selected */
 .cities.selected {	
