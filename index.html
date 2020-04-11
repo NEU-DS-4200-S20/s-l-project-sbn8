@@ -95,7 +95,20 @@
     <p><em>Expectation: Data sources match the problem statement and are appropriate. These descriptions should be very explicit so someone could read your page and properly reproduce your results.</em></p>
 
     <p>
-    We heavily utilized the zip-code data to locate attendees, and to act as bins for multiple attendees from the same area. Additionally, we use the income level (categorical), race (categorical), and favorite experiences (activity/cuisines) from the food festival (qualitative, non-categorical). The data is sourced from surveys handed out during the food festival and was then given to us in an excel file. Some preparation/preprocessing in excel was required to make managing the data go smoothly. [Outline that process here].</p>
+    We heavily utilized the zip-code data to locate attendees, and to act as bins for multiple attendees from the same area. Additionally, we use the income level (categorical), race (categorical), and favorite experiences (activity/cuisines) from the food festival (qualitative, non-categorical). The data is sourced from surveys handed out during the food festival and was then given to us in an excel file. Some preparation/preprocessing in excel was required to make managing the data go smoothly.</p>
+
+    <ol>Data Preprocessing Steps:
+      <li>Normalization of columns that exhibited a One-to-Many relationship</li>
+        <ul>
+          <li>Several columns contained data which violated First Normal Form (1NF), which states that each table cell should only have one discrete piece of data</li>
+          <li>Solution was to create new tables for each column that displayed this One-to-Many relationship and have those tables reference each attendee ID (foreign key).</li>
+        </ul>
+      <li>Addition of longitude and latitude data</li>
+        <ul>
+          <li>In addition to the zip-code data that was provided for each attendee, we also added the corresponding longitude and latitude coordinates for each zip-code in order to gain a more accurate location mapping in our final vizualization.</li>
+          <li>There are numerous online tools available for mapping US zip-codes to specific geographic coordinates, the addition of the longitude and latitude columns was done manually with the help of these tools.</li>
+        </ul> 
+      </ol>
     
     <h1>Task Analysis</h1>
 
