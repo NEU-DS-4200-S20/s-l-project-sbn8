@@ -458,7 +458,7 @@ function highlight() {
           projection([d.Lon, d.Lat])[1] <= y1 
            
   );
-  // console.log(circles);
+  console.log(circles);
   // print(citiesobj);
 
 
