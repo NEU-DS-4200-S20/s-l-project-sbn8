@@ -1,7 +1,8 @@
 var width = 1000/2;
 var height = 500/2;
 const MAP_BG_COLOR = "#cdc597";
-
+var legend_x = 400;
+var legend_y = 10; 
 
 
 //For the Map
@@ -97,7 +98,7 @@ function drawAge(cities) {
     .attr("id", "chartcontainer")
 	    .attr("transform", 
 	          "translate(" + margin.left + "," + margin.top + ")");
-	console.log(citiesobj);
+  console.log(citiesobj);
 
 	var freq = {
     "Under 18": 0,
@@ -162,7 +163,13 @@ function drawAge(cities) {
 	  svg.append("g")
 	      .call(d3.axisLeft(y_age));
 
-	
+          
+  // Handmade legend
+  svg.append("circle").attr("cx",legend_x).attr("cy",legend_y).attr("r", 3).style("fill", "red")
+  svg.append("circle").attr("cx",legend_x).attr("cy",legend_y + 9).attr("r", 3).style("fill", "steelblue")
+  svg.append("text").attr("x", legend_x + 7).attr("y", legend_y).text("Selected").style("font-size", "9px").attr("alignment-baseline","middle")
+  svg.append("text").attr("x", legend_x + 7).attr("y", legend_y + 9).text("All").style("font-size", "9px").attr("alignment-baseline","middle")
+
 }
 
 function drawRace(cities) {
@@ -171,7 +178,6 @@ function drawRace(cities) {
   //     width = 960/2 - margin.left - margin.right,
   //     height = 500/2 - margin.top - margin.bottom;
 
-   
   // set the ranges   
   x_race = d3.scaleBand()
             .range([0, width])
@@ -207,7 +213,7 @@ function drawRace(cities) {
     //   race = race.substring(0,4);
     // }
     
-    console.log(race);
+    // console.log(race);
     if (freq[race] == undefined) {
       if (race != "" && race != undefined) {
         freq[race] = 1
@@ -225,7 +231,7 @@ function drawRace(cities) {
            arr.push( { range: key, frequency: freq[key] }  );
        }
    }
-   console.log(arr);
+  //  console.log(arr);
 
 
   // Scale the range of the data in the domains
@@ -259,6 +265,13 @@ function drawRace(cities) {
   // add the y Axis
   svg2.append("g")
       .call(d3.axisLeft(y_race));
+
+    // Handmade legend
+    svg2.append("circle").attr("cx", legend_x).attr("cy",legend_y).attr("r", 3).style("fill", "red")
+    svg2.append("circle").attr("cx", legend_x).attr("cy",legend_y + 9).attr("r", 3).style("fill", "steelblue")
+    svg2.append("text").attr("x",  legend_x + 7).attr("y", legend_y).text("Selected").style("font-size", "9px").attr("alignment-baseline","middle")
+    svg2.append("text").attr("x",  legend_x + 7).attr("y", legend_y + 9).text("All").style("font-size", "9px").attr("alignment-baseline","middle")
+
 }
 
 function drawIncome(cities) {
@@ -347,6 +360,12 @@ function drawIncome(cities) {
   svg3.append("g")
       .call(d3.axisLeft(y_income));
 
+        // Handmade legend
+    svg3.append("circle").attr("cx", legend_x).attr("cy",legend_y - 24).attr("r", 3).style("fill", "red")
+    svg3.append("circle").attr("cx", legend_x).attr("cy",legend_y - 15).attr("r", 3).style("fill", "steelblue")
+    svg3.append("text").attr("x",  legend_x + 7).attr("y", legend_y - 24).text("Selected").style("font-size", "9px").attr("alignment-baseline","middle")
+    svg3.append("text").attr("x",  legend_x + 7).attr("y", legend_y - 15).text("All").style("font-size", "9px").attr("alignment-baseline","middle")
+
 
 }
 
@@ -419,7 +438,7 @@ function highlight() {
   circles.classed(
       'selected', 
       d =>
-          projection([d.Lon, d.Lat]) &&
+          d && projection([d.Lon, d.Lat]) &&
           x0 <= projection([d.Lon, d.Lat])[0] &&
           projection([d.Lon, d.Lat])[0] <= x1 &&
           y0 <= projection([d.Lon, d.Lat])[1] &&
