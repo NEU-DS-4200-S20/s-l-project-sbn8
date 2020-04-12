@@ -1,5 +1,5 @@
 var width = 1000/2;
-var height = 500/2;
+var height = 520/2;
 const MAP_BG_COLOR = "#cdc597";
 var legend_x = 400;
 var legend_y = 10; 
@@ -54,7 +54,7 @@ var y_income;
 var path = d3.geoPath().projection(projection);
 d3.json("us.json", function(err, us) {
   d3.csv("data/SBNFoodFestivalAttendee2019Data.csv", function(cities) {
-    citiesobj  = cities
+    console.log(cities)
 
     //Map Zipcode Data
     drawMap(us, cities);
@@ -72,7 +72,7 @@ d3.json("us.json", function(err, us) {
 
 
 var brush = d3.brush().on("start brush", highlight).on("end", brushend);
-var margin = {top: 20, right: 20, bottom: 50, left: 40},
+var margin = {top: 20, right: 20, bottom: 60, left: 40},
       width = 1000/2 - margin.left - margin.right,
       height = 500/2 - margin.top - margin.bottom;
 
@@ -212,6 +212,19 @@ function drawRace(cities) {
     // if (race != "" && race != undefined) {
     //   race = race.substring(0,4);
     // }
+    switch(race) {
+      case "White/Caucasian":
+        race = "Caucasian"
+        break;
+      case "African American":
+        race = "African Am."
+        break;
+      case "American Indian or Alaskan Native":
+        race = "Native Am."
+        break;
+      default:
+        // code block
+    } 
     
     // console.log(race);
     if (freq[race] == undefined) {
@@ -428,7 +441,7 @@ function drawMap(us, cities) {
 function highlight() {
   if (d3.event.selection === null) return;
 
-  var margin = {top: 20, right: 20, bottom: 50, left: 40},
+  var margin = {top: 20, right: 20, bottom: 60, left: 40},
     width = 1000/2 - margin.left - margin.right,
     height = 500/2 - margin.top - margin.bottom;
 
@@ -508,17 +521,31 @@ var freq_race = {}
 // selected for race, NOT "selected race"
 var selected_race = d3.selectAll(".selected")
                     .each(function(d) {
-                      var agerange = d["Race"]
+                      var race = d["Race"]
+                      console.log(race)
+                      switch(race) {
+                        case "White/Caucasian":
+                          race = "Caucasian"
+                          break;
+                        case "African American":
+                          race = "African Am."
+                          break;
+                        case "American Indian or Alaskan Native":
+                          race = "Native Am."
+                          break;
+                        default:
+                          // code block
+                      } 
 
-                      if (agerange != "") {
+                      if (race != "") {
 
-                        if (freq_race[agerange]) {
-                          freq_race[agerange] += 1
+                        if (freq_race[race]) {
+                          freq_race[race] += 1
                           // console.log(freq[agerange]);
 
                         }
                         else {
-                          freq_race[agerange] = 1
+                          freq_race[race] = 1
 
                         }
                       }
@@ -602,3 +629,35 @@ d3.select("#chartcontainer3")
 }
 function brushend() {
 }
+
+var legend = svg
+  .append("g")
+  .attr("class", "legend")
+  .attr("width", 140)
+  .attr("height", 200)
+  .selectAll("g")
+  .data([
+    {'color': 'steelblue', 'label': 'Festival Attendee'}, 
+    {'color': 'red', 'label': 'Selected'}
+  ])
+  .enter()
+  .append("g")
+  .attr("transform", function(d, i) {
+    return "translate(0," + i * 20 + ")";
+  });
+
+legend
+  .append("rect")
+  .attr("width", 8)
+  .attr("height", 8)
+  .style("fill", function(d) { 
+    return d.color
+  });
+
+legend
+  .append("text")
+  .attr("x", 8)
+  .attr("y", 9)
+  .attr("dy", ".35em")
+  .style("font", "12px arial")
+  .text(function(d) { return d.label });
