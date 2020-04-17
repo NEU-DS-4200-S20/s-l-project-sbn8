@@ -54,7 +54,7 @@ var y_income;
 var path = d3.geoPath().projection(projection);
 d3.json("us.json", function(err, us) {
   d3.csv("data/SBNFoodFestivalAttendee2019Data.csv", function(cities) {
-    console.log(cities)
+    // console.log(cities)
 
     //Map Zipcode Data
     drawMap(us, cities);
@@ -113,7 +113,6 @@ function drawAge(cities) {
 
 	// get frequencies of age ranges
 	 for (row in cities){
-	 	// console.log(cities[row]["What is your age range?"]);
 	 	agerange = cities[row]["What is your age range?"]
     if (agerange == "65") {
       agerange = "65+";
@@ -273,11 +272,11 @@ function drawRace(cities) {
   svg2.append("g")
       .call(d3.axisLeft(y_race));
 
-    // Handmade legend
-    svg2.append("circle").attr("cx", legend_x).attr("cy",legend_y).attr("r", 3).style("fill", "red")
-    svg2.append("circle").attr("cx", legend_x).attr("cy",legend_y + 9).attr("r", 3).style("fill", "steelblue")
-    svg2.append("text").attr("x",  legend_x + 7).attr("y", legend_y).text("Selected").style("font-size", "9px").attr("alignment-baseline","middle")
-    svg2.append("text").attr("x",  legend_x + 7).attr("y", legend_y + 9).text("All").style("font-size", "9px").attr("alignment-baseline","middle")
+  // Handmade legend
+  svg2.append("circle").attr("cx", legend_x).attr("cy",legend_y).attr("r", 3).style("fill", "red")
+  svg2.append("circle").attr("cx", legend_x).attr("cy",legend_y + 9).attr("r", 3).style("fill", "steelblue")
+  svg2.append("text").attr("x",  legend_x + 7).attr("y", legend_y).text("Selected").style("font-size", "9px").attr("alignment-baseline","middle")
+  svg2.append("text").attr("x",  legend_x + 7).attr("y", legend_y + 9).text("All").style("font-size", "9px").attr("alignment-baseline","middle")
 
 }
 
@@ -470,12 +469,14 @@ function highlight() {
   var selected = d3.selectAll(".selected")
                     .each(function(d) {
                       var agerange = d["What is your age range?"]
+                      if (agerange == "65") {
+                        agerange = "65+";
+                      }
 
                       if (agerange != "") {
 
                         if (freq[agerange]) {
                           freq[agerange] += 1
-                          // console.log(freq[agerange]);
 
                         }
                         else {
@@ -484,7 +485,6 @@ function highlight() {
                         }
                       }
 
-                      // console.log(freq);
   });
 
    // convert freq to list of objects, category -> size
@@ -496,7 +496,6 @@ function highlight() {
            arr.push( { range: key, frequency: freq[key] }  );
        }
    }
-   // console.log(freq);
 
   // add new red rectangles over the bar chart, indicating selected
   d3.select("#chartcontainer")
@@ -520,7 +519,6 @@ var freq_race = {}
 var selected_race = d3.selectAll(".selected")
                     .each(function(d) {
                       var race = d["Race"]
-                      console.log(race)
                       switch(race) {
                         case "White/Caucasian":
                           race = "Caucasian"
@@ -539,7 +537,6 @@ var selected_race = d3.selectAll(".selected")
 
                         if (freq_race[race]) {
                           freq_race[race] += 1
-                          // console.log(freq[agerange]);
 
                         }
                         else {
@@ -586,7 +583,6 @@ var selected_income = d3.selectAll(".selected")
 
                         if (freq_income[income]) {
                           freq_income[income] += 1
-                          // console.log(freq[income]);
 
                         }
                         else {
@@ -606,7 +602,6 @@ for (var key in freq_income) {
        arr3.push( { range: key, frequency: freq_income[key] }  );
    }
 }
-console.log(arr3);
 
 // add new red rectangles over the bar chart, indicating selected
 d3.select("#chartcontainer3")
