@@ -76,6 +76,9 @@ var margin = {top: 20, right: 20, bottom: 60, left: 40},
       width = 1000/2 - margin.left - margin.right,
       height = 500/2 - margin.top - margin.bottom;
 
+
+// barchart modelled after this example https://bl.ocks.org/d3noob/8952219
+// some data preprocessing done here too
 function drawAge(cities) {
   // set the dimensions and margins of the graph
 	
@@ -107,6 +110,7 @@ function drawAge(cities) {
     "51-64": 0,
     "65+": 0
   }
+
 	// get frequencies of age ranges
 	 for (row in cities){
 	 	// console.log(cities[row]["What is your age range?"]);
@@ -134,7 +138,6 @@ function drawAge(cities) {
 	         arr.push( { range: key, frequency: freq[key] }  );
 	     }
 	 }
-	 console.log(arr);
 
 
 	 // Scale the range of the data in the domains
@@ -171,6 +174,8 @@ function drawAge(cities) {
 
 }
 
+// barchart modelled after this example https://bl.ocks.org/d3noob/8952219
+// some data preprocessing done here too
 function drawRace(cities) {
   // set the dimensions and margins of the graph
   // var margin = {top: 20, right: 20, bottom: 30, left: 40},
@@ -192,25 +197,15 @@ function drawRace(cities) {
     .attr("id", "chartcontainer2")
       .attr("transform", 
             "translate(" + margin.left + "," + margin.top + ")");
-  // console.log(cities);
 
   // only need to put values dict is you want to order them
-  var freq = {
-    // "Hispanic/Latino": 0,
-    // "American Indian or Alaskan Native": 0,
-    // "White/Caucasian": 0,
-    // "Asian": 0,
-    //
-  }
-
+  // see freq in drawAge or drawIncome for example
+  var freq = {}
 
   // get frequencies of race groups
-   for (row in cities){
-    race = cities[row]["Race"]//.substring(0,4);
-    // console.log(typeof race);
-    // if (race != "" && race != undefined) {
-    //   race = race.substring(0,4);
-    // }
+  for (row in cities) {
+    race = cities[row]["Race"]
+    // fix naming to fit and to be cleaner looking
     switch(race) {
       case "White/Caucasian":
         race = "Caucasian"
@@ -225,7 +220,7 @@ function drawRace(cities) {
         // code block
     } 
     
-    // console.log(race);
+    // sum frequencies
     if (freq[race] == undefined) {
       if (race != "" && race != undefined) {
         freq[race] = 1
@@ -236,6 +231,7 @@ function drawRace(cities) {
     }
    }
 
+   // into needed object structure for bar chart
    var arr = [];
 
    for (var key in freq) {
@@ -243,8 +239,6 @@ function drawRace(cities) {
            arr.push( { range: key, frequency: freq[key] }  );
        }
    }
-  //  console.log(arr);
-
 
   // Scale the range of the data in the domains
   x_race.domain(arr.map(function(d) { return d.range; }));
@@ -265,6 +259,7 @@ function drawRace(cities) {
 
 
   // add the x Axis
+  // labels are rotated here
   svg2.append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x_race))
@@ -286,6 +281,8 @@ function drawRace(cities) {
 
 }
 
+// barchart modelled after this example https://bl.ocks.org/d3noob/8952219
+// some data preprocessing done here too
 function drawIncome(cities) {
 
   // set the ranges
@@ -303,7 +300,6 @@ function drawIncome(cities) {
     .attr("id", "chartcontainer3")
       .attr("transform", 
             "translate(" + margin.left + "," + margin.top + ")");
-  // console.log(cities);
 
   // only need to put values dict is you want to order them
   var freq = {
@@ -316,11 +312,10 @@ function drawIncome(cities) {
   }
 
   // get frequencies of race groups
-  // console.log(cities)
   for (row in cities){
     income = cities[row]["Please indicate your household income"]
-    
-    // console.log(income);
+
+    // sum frequencies
     if (freq[income] == undefined) {
       if (income != "" && income != undefined) {
         freq[income] = 1
@@ -331,6 +326,8 @@ function drawIncome(cities) {
     }
    }
 
+
+   // into needed object structure for bar chart
    var arr = [];
 
    for (var key in freq) {
@@ -338,7 +335,6 @@ function drawIncome(cities) {
            arr.push( { range: key, frequency: freq[key] }  );
        }
    }
-   // console.log(arr);
 
 
   // Scale the range of the data in the domains
@@ -358,6 +354,7 @@ function drawIncome(cities) {
 
 
   // add the x Axis
+  // leaving in positional lines just in case it needs to be adjusted
   svg3.append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x_income))
@@ -372,17 +369,19 @@ function drawIncome(cities) {
   svg3.append("g")
       .call(d3.axisLeft(y_income));
 
-        // Handmade legend
-    svg3.append("circle").attr("cx", legend_x).attr("cy",legend_y - 24).attr("r", 3).style("fill", "red")
-    svg3.append("circle").attr("cx", legend_x).attr("cy",legend_y - 15).attr("r", 3).style("fill", "steelblue")
-    svg3.append("text").attr("x",  legend_x + 7).attr("y", legend_y - 24).text("Selected").style("font-size", "9px").attr("alignment-baseline","middle")
-    svg3.append("text").attr("x",  legend_x + 7).attr("y", legend_y - 15).text("All").style("font-size", "9px").attr("alignment-baseline","middle")
+  // Handmade legend
+  svg3.append("circle").attr("cx", legend_x).attr("cy",legend_y - 24).attr("r", 3).style("fill", "red")
+  svg3.append("circle").attr("cx", legend_x).attr("cy",legend_y - 15).attr("r", 3).style("fill", "steelblue")
+  svg3.append("text").attr("x",  legend_x + 7).attr("y", legend_y - 24).text("Selected").style("font-size", "9px").attr("alignment-baseline","middle")
+  svg3.append("text").attr("x",  legend_x + 7).attr("y", legend_y - 15).text("All").style("font-size", "9px").attr("alignment-baseline","middle")
 
 
 }
 
 
+// most of this code was given to us in an example, simply adjusted for our project
 function drawMap(us, cities) {
+
   var mapGroup = svg.append("g").attr("class", "mapGroup");
 
   svg.call(d3.zoom().on("zoom", function () {
@@ -444,8 +443,10 @@ function highlight() {
     width = 1000/2 - margin.left - margin.right,
     height = 500/2 - margin.top - margin.bottom;
 
+
   let [[x0, y0], [x1, y1]] = d3.event.selection;
 
+  // if circles inside brush tool, they get class "selected"
   circles = d3.selectAll("circle");
   circles.classed(
       'selected', 
@@ -457,11 +458,9 @@ function highlight() {
           projection([d.Lon, d.Lat])[1] <= y1 
            
   );
-  console.log(circles);
-  // print(citiesobj);
 
 
-
+  // remove all red bars from barchart
   d3.selectAll("g.highlighted")
     .remove();
 
@@ -560,7 +559,6 @@ for (var key in freq_race) {
        arr2.push( { range: key, frequency: freq_race[key] }  );
    }
 }
-// console.log(arr2);
 
 // add new red rectangles over the bar chart, indicating selected
 d3.select("#chartcontainer2")
