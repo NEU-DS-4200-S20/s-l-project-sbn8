@@ -107,9 +107,7 @@ function drawAge(cities) {
     "51-64": 0,
     "65+": 0
   }
-  console.log(freq);
 	// get frequencies of age ranges
-	// console.log(cities)
 	 for (row in cities){
 	 	// console.log(cities[row]["What is your age range?"]);
 	 	agerange = cities[row]["What is your age range?"]
@@ -125,10 +123,7 @@ function drawAge(cities) {
 	 		freq[agerange] += 1
 	 	}
 
-    console.log(freq);
 	 }
-
-	 console.log(freq)
 
 	 // convert freq to list of objects, category -> size
 	 // var dict = { 'a': 'aa', 'b': 'bb' };
