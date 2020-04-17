@@ -81,28 +81,28 @@ var margin = {top: 20, right: 20, bottom: 60, left: 40},
 // some data preprocessing done here too
 function drawAge(cities) {
   // set the dimensions and margins of the graph
-	
+  
 
-	// set the ranges
-	x_age = d3.scaleBand()
-	          .range([0, width])
-	          .padding(0.1);
-	y_age = d3.scaleLinear()
-	          .range([height, 0]);
+  // set the ranges
+  x_age = d3.scaleBand()
+            .range([0, width])
+            .padding(0.1);
+  y_age = d3.scaleLinear()
+            .range([height, 0]);
 
-	// append the svg object to the body of the page
-	// append a 'group' element to 'svg'
-	// moves the 'group' element to the top left margin
-	var svg = svg_age.append("g")
+  // append the svg object to the body of the page
+  // append a 'group' element to 'svg'
+  // moves the 'group' element to the top left margin
+  var svg = svg_age.append("g")
       .attr("class", "svg age")
-	    .attr("width", width + margin.left + margin.right)
-	    .attr("height", height + margin.top + margin.bottom)
-	  .append("g")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
     .attr("id", "chartcontainer")
-	    .attr("transform", 
-	          "translate(" + margin.left + "," + margin.top + ")");
+      .attr("transform", 
+            "translate(" + margin.left + "," + margin.top + ")");
 
-	var freq = {
+  var freq = {
     "Under 18": 0,
     "19-25": 0,
     "26-35": 0,
@@ -111,58 +111,58 @@ function drawAge(cities) {
     "65+": 0
   }
 
-	// get frequencies of age ranges
-	 for (row in cities){
-	 	agerange = cities[row]["What is your age range?"]
+  // get frequencies of age ranges
+   for (row in cities){
+    agerange = cities[row]["What is your age range?"]
     if (agerange == "65") {
       agerange = "65+";
     }
-	 	if (freq[agerange] == undefined) {
-	 		if (agerange != "" && agerange != undefined) {
-	 			freq[agerange] = 1
-	 		}
-	 	} 
-	 	else {
-	 		freq[agerange] += 1
-	 	}
+    if (freq[agerange] == undefined) {
+      if (agerange != "" && agerange != undefined) {
+        freq[agerange] = 1
+      }
+    } 
+    else {
+      freq[agerange] += 1
+    }
 
-	 }
+   }
 
-	 // convert freq to list of objects, category -> size
-	 // var dict = { 'a': 'aa', 'b': 'bb' };
-	 var arr = [];
+   // convert freq to list of objects, category -> size
+   // var dict = { 'a': 'aa', 'b': 'bb' };
+   var arr = [];
 
-	 for (var key in freq) {
-	     if (freq.hasOwnProperty(key)) {
-	         arr.push( { range: key, frequency: freq[key] }  );
-	     }
-	 }
-
-
-	 // Scale the range of the data in the domains
-	  x_age.domain(arr.map(function(d) { return d.range; }));
-	  y_age.domain([0, d3.max(arr, function(d) { return d.frequency; })]);
+   for (var key in freq) {
+       if (freq.hasOwnProperty(key)) {
+           arr.push( { range: key, frequency: freq[key] }  );
+       }
+   }
 
 
-	 // append the rectangles for the bar chart
-	  svg.selectAll(".bar")
-	      .data(arr)
-	    .enter().append("rect")
-	      .attr("class", "bar")
-	      .attr("x", function(d) { return x_age(d.range); })
-	      .attr("width", x_age.bandwidth())
-	      .attr("y", function(d) { return y_age(d.frequency); })
-	      .attr("height", function(d) { return height - y_age(d.frequency); });
+   // Scale the range of the data in the domains
+    x_age.domain(arr.map(function(d) { return d.range; }));
+    y_age.domain([0, d3.max(arr, function(d) { return d.frequency; })]);
 
 
-	 // add the x Axis
-	svg.append("g")
-	      .attr("transform", "translate(0," + height + ")")
-	      .call(d3.axisBottom(x_age));
+   // append the rectangles for the bar chart
+    svg.selectAll(".bar")
+        .data(arr)
+      .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", function(d) { return x_age(d.range); })
+        .attr("width", x_age.bandwidth())
+        .attr("y", function(d) { return y_age(d.frequency); })
+        .attr("height", function(d) { return height - y_age(d.frequency); });
 
-	  // add the y Axis
-	  svg.append("g")
-	      .call(d3.axisLeft(y_age));
+
+   // add the x Axis
+  svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x_age));
+
+    // add the y Axis
+    svg.append("g")
+        .call(d3.axisLeft(y_age));
 
           
   // Handmade legend
