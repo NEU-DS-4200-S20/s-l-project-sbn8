@@ -51,8 +51,6 @@
     
     <h1>Visualization</h1>
     
-    <p><em>Include the interactive visualization as part of this page. Static example follows.</em></p>
-    
   </div>
   
   <!-- Your visualization here -->
@@ -92,12 +90,10 @@
     
     <p><em>Final visualization screenshots (PNG images), design justifications, UI walk-through, and linked presentation slides.</em></p>
 
-    <p> Included in Data Analysis section, see below. </p>
+    <p><em> Write-up after final version is complete </em></p>
+
 
     <h1>Data Analysis</h1>
-    <p><em>Summary of data, data types, and data preprocessing.</em></p>
-
-    <p><em>Expectation: Data sources match the problem statement and are appropriate. These descriptions should be very explicit so someone could read your page and properly reproduce your results.</em></p>
 
     <p>
     We heavily utilized the zip-code data to locate attendees, and to act as bins for multiple attendees from the same area. Additionally, we use the income level (categorical), race (categorical), and favorite experiences (activity/cuisines) from the food festival (qualitative, non-categorical). The data is sourced from surveys handed out during the food festival and was then given to us in an excel file. Some preparation/preprocessing in excel was required to make managing the data go smoothly.</p>
@@ -117,12 +113,8 @@
     
     <h1>Task Analysis</h1>
 
-    <p><em>Summary of task table.</em></p>
-
-    <p><em>Expectation: Clearly describes domain tasks, processes, goals and abstract tasks for domain problems.</em></p>
-
     <p>
-      There are three main tasks that our vizualization hopes to accomplish.
+      Thee main task that our vizualization hopes to accomplish is a demographic analysis of the attendees at the food festival: 
     </p>
 
     <ol type="1">
@@ -134,25 +126,26 @@
     </ol>
     
     <h1>Design Process</h1>
-    
-    <p><em>Sketches and design choices to justify final visualization.</em></p>
-
-    <p><em>Expectation: Evidence of iterative improvement.
-    Logical discussion of design choices grounded in theory from course.
-    Discusses feedback from usability testing.</em></p>
 
     <p>
-    	From our original conversations with SBN, we knew we wanted to focus on showing the demographics of attendees. Looking through the data, the best options to show this were the zip-code location, race, age, and income data. 
+    	From our original conversations with SBN, we knew we wanted to focus on showing the demographics of attendees. Looking through the data, the best options to show this were the zip-code location, race, age, and income data. Our original sketches, shown below, highlight some of the ideation process where we tried to come up with the best way of showing this and where we considered some other aspects of the data to focus on before settling on the demographic focus. 
+    </p>
+    <p>  
+    	<img src="images/Sketch_1.png" alt="Original Sketch 1"  width =32% height = 200> 
+    	<img src="images/Sketch_2.png" alt="Original Sketch 2"  width =32% height = 200>
+    	<img src="images/Sketch_3.png" alt="Original Sketch 3"  width =32% height = 200>
     </p>
     <p>
-    	The zipcode location lent itself well to a map-based visualization. For the other three sets of data, we were originally unsure of how we wanted to implement them and after some thought settled on bar charts as they were set into a few categories that lent themselves well to bar chart formats. We then implemented brushing and one-way linking to enable the user to better see the demographics of the attendees coming from different locations. [Add more about design choices/theory]
+    	After discussion, our consensus led to a more refined visualization which more closely resembles the final outcome as seen below. We used tableu to get a sense of what our ideas would look like with the data in place, although we had yet to implement our final version which included the bar charts that also have the interactivity with the brushing and linking. 
+    </p>
+    <p>
+    	<img src="images/Sketch_4.png" alt="Refined Sketch 4" height = 200>
+   	</p>
+    <p>
+    	For our final visualization, the zipcode location lent itself well to a map-based visualization. For the other three sets of data, we were originally unsure of how we wanted to implement them and after some thought settled on bar charts as they were set into a few categories that lent themselves well to bar chart formats. We then implemented brushing and one-way linking to enable the user to better see the demographics of the attendees coming from different locations.
     </p>
     <h1>Conclusion</h1>
 
-    <p><em>Short summary of work completed and areas for improvement/future-work.</em></p>
-    
-    <p><em>Expectation: Meaningfully wraps up project and has good future directions.</em></p>
-    <p>
     	Our final visualization shows the demogrpahics of attendees from a particular zipcode. Utilizing a map with brushing that links to three bar charts with those demographics we provide a way of better understanding the festival attendees. 
     </p>
     <p>
@@ -160,8 +153,6 @@
     </p>
     
     <h1>Acknowledgments</h1>
-
-    <p><em>List here where any code, packages/libraries, text, images, designs, etc. that you leverage come from.</em></p>
     
     <ul>
       <li><a href="https://gist.github.com/erichurst/7882666">All US zip codes with their corresponding latitude and longitude coordinates.</a> from United States Census Bureau</li>
